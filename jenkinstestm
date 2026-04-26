@@ -1,0 +1,53 @@
+pipeline {
+#add test jenkinstest in maven repository of local and git basic and do git push for copy local git to gitremote github
+
+    agent any // Runs on any available executor
+
+    options {
+        timeout(time: 1, unit: 'secods')
+        timestamps() // Adds timestamps to the console log
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Pulling code from Git...'
+                // git url: 'https://github.com/your-repo/project.git', branch: 'main'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Compiling the application...'
+                // sh './mvnw clean install' or 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running unit tests...'
+                // sh './mvnw test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to Staging Environment...'
+                // Use credentials for secure deployment
+                // withCredentials([string(credentialsId: 'API_KEY', variable: 'KEY')]) { ... }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up workspace...'
+        }
+        success {
+            echo 'Build successful! Sending notification...'
+        }
+        failure {
+            echo 'Build failed. Check the logs.'
+        }
+    }
+}
